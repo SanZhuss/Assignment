@@ -1,38 +1,128 @@
 // ======================= Main.java =======================
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.*;
+
+
 public class Main{
-    public static void main(String[] args) {
+    Random random = new Random();
+    Scanner input = new Scanner(System.in);
+    List<Cinema> cinemas = new ArrayList<>();
+    List<Film> films = new ArrayList<>();
+    List<Film> filmsBooked = new ArrayList<>();
+    List<Cinema> cinemasBooked = new ArrayList<>();
+    List<Viewer> viewers = new ArrayList<>();
+    int count = 0;
+    int people = 0;
+    public void showCinema() {
+        if(count == 0){
+            String[] names = {
+                    "StarCinema", "MegaCinema", "UltraCinema", "LegandCinema", "OuterWorldTheater",
+                    "CinemaOfJustice", "GoodCinema"
+            };
 
-        // Create Films
-        Film f1 = new Film("Inception", "Sci-Fi", 148);
-        Film f2 = new Film("Interstellar", "Sci-Fi", 169);
-        Film f3 = new Film("Solaris", "Sci-Fi", 121);
+            String[] locations = {
+                    "Downtown", "City Center", "Metro Miami Center", "Gotham", "Wall Street",
+                    "Anthem Center", "Proud Street"
+            };
 
-        // Create Viewers
-        Viewer v1 = new Viewer("Alice", 22);
-        Viewer v2 = new Viewer("Bob", 30);
+            for (int i = 0; i < 7; i++) {
+                String name = names[i];
+                String location = locations[random.nextInt(locations.length)];
+                cinemas.add(new Cinema(name, location));
+            }
+        }
 
-        // Create Cinemas
-        Cinema c1 = new Cinema("MegaCinema", "Downtown");
-        Cinema c2 = new Cinema("StarCinema", "City Center");
+        IO.println("Список кинотеатров: ");
+        int count = 0;
+        for (Cinema cinem : cinemas) {
+            count++;
+            IO.println(count + ". " + cinem);
+        }
+        this.count = 0;
+    };
 
-        // Output to console
-        f1.printInfo();
-        f2.printInfo();
-        v1.printInfo();
-        v2.printInfo();
-        c1.printInfo();
-        c2.printInfo();
+    public void setCinema(){
+        IO.println("Выберите удобный кинотеатр (от 1 до 7): ");
+        int cinemaNO = input.nextInt();
+        input.nextLine();
+        cinemasBooked.add(cinemas.get(cinemaNO-1));
+    }
 
-        System.out.println("\n===== COMPARISON =====");
+    public void showFilm(){
+        if(count == 0){
+            String[] titles = {
+                    "Silent Night", "Dark Horizon", "Last Hope", "Lost City",
+                    "Red Shadow", "Golden Path", "Broken Dreams", "Final Escape",
+                    "Hidden Truth", "Iron Will", "Cold Fire", "Blue Moon",
+                    "Fallen Star", "Midnight Run", "Echoes", "Storm Riders",
+                    "Infinite Loop", "Dead Zone", "Neon Lights", "Forgotten Road"
+            };
 
-        // Compare Films
-        IO.println("f1 equals f2? " + f1.equals(f2));
-        IO.println("f1 equals f3? " + f1.equals(f3));
+            String[] genres = {
+                    "Action", "Drama", "Comedy", "Thriller", "Sci-Fi",
+                    "Fantasy", "Horror", "Romance"
+            };
 
-        // Compare Viewers
-        IO.println("v1 equals v2? " + v1.equals(v2));
+            for (int i = 0; i < 20; i++) {
+                String title = titles[i];
+                String genre = genres[random.nextInt(genres.length)];
+                int duration = 80 + random.nextInt(61); // 80–140 minutes
+                double rating = Math.round((5 + random.nextDouble() * 5) * 10.0) / 10.0; // 5.0–10.0
+                films.add(new Film(title, genre, duration, rating));
+            }
+        }
+        this.count = 7;
+        IO.println("Список доступных фильмов: ");
+        for(Film fl : films){
+            IO.println("- " + fl);
+        }
+    };
 
-        // Compare Cinemas
-        IO.println("c1 equals c2? " + c1.equals(c2));
+    public void setFilm(){
+        IO.println("Выберите фильм: ");
+        int cinemaNO = input.nextInt();
+        input.nextLine();
+        filmsBooked.add(films.get(cinemaNO-1));
+    }
+
+    public void setViewer(){
+        Scanner input = new Scanner(System.in);
+        IO.println("Имя зрителя: ");
+        String name = input.nextLine();
+
+        IO.println("Возраст: ");
+        int age = input.nextInt();
+        input.nextLine();
+
+        String ticket;
+        if(age < 18){
+            ticket = "child";
+        }else{
+            ticket = "adult";
+        }
+        Viewer person = new Viewer(name, age, ticket);
+        viewers.add(person);
+        people++;
+    };
+
+    public void main(String[] args) {
+        while(true){
+            showCinema();
+            setCinema();
+            showFilm();
+            setFilm();
+            setViewer();
+            for(int i = 0; i < people; i++){
+                IO.println((i+1) + ")\n" + "- " + cinemasBooked.get(i) + "\n" + "- " + filmsBooked.get(i) + "\n" + "- " + viewers.get(i));
+            }
+            IO.println("Хотите еще одного человека добавить?(yes/no):");
+            String st = input.nextLine();
+            if (st.equalsIgnoreCase("no")){
+                break;
+            }
+        }
     }
 }

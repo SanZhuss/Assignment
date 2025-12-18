@@ -2,6 +2,7 @@
 public class Cinema {
     private String name;
     private String location;
+    private int films;
 
     public Cinema(String name, String location) {
         this.name = name;
@@ -23,5 +24,10 @@ public class Cinema {
     // Compare cinemas by name
     public boolean equals(Cinema other) {
         return this.name.equals(other.name);
+    }
+
+    @Override
+    public String toString() {
+        return "Cinema: " + name + " | Location: " + location;
     }
 }
