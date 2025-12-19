@@ -7,16 +7,16 @@ import java.util.*;
 
 
 public class Main{
-    Random random = new Random();
-    Scanner input = new Scanner(System.in);
-    List<Cinema> cinemas = new ArrayList<>();
-    List<Film> films = new ArrayList<>();
-    List<Film> filmsBooked = new ArrayList<>();
-    List<Cinema> cinemasBooked = new ArrayList<>();
-    List<Viewer> viewers = new ArrayList<>();
-    int count = 0;
-    int people = 0;
-    public void showCinema() {
+    static Random random = new Random();
+    static Scanner input = new Scanner(System.in);
+    static List<Cinema> cinemas = new ArrayList<>();
+    static List<Film> films = new ArrayList<>();
+    static List<Film> filmsBooked = new ArrayList<>();
+    static List<Cinema> cinemasBooked = new ArrayList<>();
+    static List<Viewer> viewers = new ArrayList<>();
+    static int count = 0;
+    static int people = 0;
+    public static void showCinema() {
         if(count == 0){
             String[] names = {
                     "StarCinema", "MegaCinema", "UltraCinema", "LegandCinema", "OuterWorldTheater",
@@ -41,17 +41,17 @@ public class Main{
             count++;
             IO.println(count + ". " + cinem);
         }
-        this.count = 0;
+        count = 0;
     };
 
-    public void setCinema(){
+    public static void setCinema(){
         IO.println("Выберите удобный кинотеатр (от 1 до 7): ");
         int cinemaNO = input.nextInt();
         input.nextLine();
         cinemasBooked.add(cinemas.get(cinemaNO-1));
     }
 
-    public void showFilm(){
+    public static void showFilm(){
         if(count == 0){
             String[] titles = {
                     "Silent Night", "Dark Horizon", "Last Hope", "Lost City",
@@ -74,21 +74,21 @@ public class Main{
                 films.add(new Film(title, genre, duration, rating));
             }
         }
-        this.count = 7;
+        count = 7;
         IO.println("Список доступных фильмов: ");
         for(Film fl : films){
             IO.println("- " + fl);
         }
     };
 
-    public void setFilm(){
+    public static void setFilm(){
         IO.println("Выберите фильм: ");
         int cinemaNO = input.nextInt();
         input.nextLine();
         filmsBooked.add(films.get(cinemaNO-1));
     }
 
-    public void setViewer(){
+    public static void setViewer(){
         Scanner input = new Scanner(System.in);
         IO.println("Имя зрителя: ");
         String name = input.nextLine();
@@ -108,7 +108,7 @@ public class Main{
         people++;
     };
 
-    public void main(String[] args) {
+    public static void main(String[] args) {
         while(true){
             showCinema();
             setCinema();
