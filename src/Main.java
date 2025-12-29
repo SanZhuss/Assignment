@@ -7,16 +7,17 @@ import java.util.*;
 
 
 public class Main{
-    static Random random = new Random();
-    static Scanner input = new Scanner(System.in);
-    static List<Cinema> cinemas = new ArrayList<>();
-    static List<Film> films = new ArrayList<>();
-    static List<Film> filmsBooked = new ArrayList<>();
-    static List<Cinema> cinemasBooked = new ArrayList<>();
-    static List<Viewer> viewers = new ArrayList<>();
-    static int count = 0;
-    static int people = 0;
-    public static void showCinema() {
+    Random random = new Random();
+    Scanner input = new Scanner(System.in);
+    List<Cinema> cinemas = new ArrayList<>();
+    List<Film> films = new ArrayList<>();
+    List<Film> filmsBooked = new ArrayList<>(); Film resFilm;
+    List<Cinema> cinemasBooked = new ArrayList<>();
+    List<Viewer> viewers = new ArrayList<>();
+    int count = 0;
+    int people = 0;
+    boolean key = true; double price;
+    public void showCinema() {
         if(count == 0){
             String[] names = {
                     "StarCinema", "MegaCinema", "UltraCinema", "LegandCinema", "OuterWorldTheater",
@@ -44,14 +45,14 @@ public class Main{
         count = 0;
     };
 
-    public static void setCinema(){
+    public void setCinema(){
         IO.println("Выберите удобный кинотеатр (от 1 до 7): ");
         int cinemaNO = input.nextInt();
         input.nextLine();
         cinemasBooked.add(cinemas.get(cinemaNO-1));
     }
 
-    public static void showFilm(){
+    public void showFilm(){
         if(count == 0){
             String[] titles = {
                     "Silent Night", "Dark Horizon", "Last Hope", "Lost City",
@@ -69,27 +70,32 @@ public class Main{
             for (int i = 0; i < 20; i++) {
                 String title = titles[i];
                 String genre = genres[random.nextInt(genres.length)];
-                int duration = 80 + random.nextInt(61); // 80–140 minutes
+                double price = 1000 + random.nextInt(1001); // 80–140 minutes
                 double rating = Math.round((5 + random.nextDouble() * 5) * 10.0) / 10.0; // 5.0–10.0
-                films.add(new Film(title, genre, duration, rating));
+                films.add(new Film(title, genre, price, rating));
             }
         }
         count = 7;
         IO.println("Список доступных фильмов: ");
+        int cnt = 0;
         for(Film fl : films){
-            IO.println("- " + fl);
+            cnt++;
+            IO.println(cnt + ". " + fl);
         }
     };
 
-    public static void setFilm(){
+    public void setFilm(){
         IO.println("Выберите фильм: ");
-        int cinemaNO = input.nextInt();
+        int filmNO = input.nextInt();
         input.nextLine();
-        filmsBooked.add(films.get(cinemaNO-1));
+        resFilm = films.get(filmNO-1);
+        filmsBooked.add(films.get(filmNO-1));
     }
 
-    public static void setViewer(){
+    public void setViewer(){
         Scanner input = new Scanner(System.in);
+        int id; people++;
+        Viewer person;
         IO.println("Имя зрителя: ");
         String name = input.nextLine();
 
@@ -97,27 +103,88 @@ public class Main{
         int age = input.nextInt();
         input.nextLine();
 
-        String ticket;
-        if(age < 18){
-            ticket = "child";
-        }else{
-            ticket = "adult";
+        IO.println("Кто вы?(Введите число): \n1)Студент  \n2)Взрослый  \n3)ВИП Персона");
+        int vwr = input.nextInt();
+        input.nextLine();
+
+        if(vwr==1) {
+            IO.println("Введите название вашего Университета:");
+            String univ = input.nextLine();
+            person = new StudentViewer(name, age, univ);
+            this.price = resFilm.getPrice()*(1-person.getDiscount());
+            viewers.add(person);
+        } else if (vwr==2) {
+            IO.println("Введите Старховой номер:");
+            id = input.nextInt();
+            input.nextLine();
+            person = new PensionerViewer(name, age, id);
+            this.price = resFilm.getPrice()*(1-person.getDiscount());
+            viewers.add(person);
+        } else if (vwr == 3) {
+            IO.println("Введите VIP номер:");
+            id = input.nextInt();
+            input.nextLine();
+            person = new VIPViewer(name, age, id);
+            this.price = resFilm.getPrice()*(1-person.getDiscount());
+            viewers.add(person);
         }
-        Viewer person = new Viewer(name, age, ticket);
-        viewers.add(person);
-        people++;
+        IO.println("Стоимость билета: " + this.price);
+        IO.println("Введите сумму денег: ");
+        double balance = input.nextInt();
+        input.nextLine();
+
+        while(true){
+            if(balance < resFilm.getPrice()){
+                IO.println("Недостаточно средств! Пожалуйста, введите новую сумму денег: ");
+                balance = input.nextInt();
+                input.nextLine();
+            }
+            else{
+                break;
+            }
+        }
+        IO.println("Билет куплен. Cдача: " + (balance-price));
     };
 
-    public static void main(String[] args) {
-        while(true){
-            showCinema();
-            setCinema();
-            showFilm();
-            setFilm();
-            setViewer();
-            for(int i = 0; i < people; i++){
-                IO.println((i+1) + ")\n" + "- " + cinemasBooked.get(i) + "\n" + "- " + filmsBooked.get(i) + "\n" + "- " + viewers.get(i));
+    public void showTicket(){
+        for(int i = 0; i < people; i++){
+            IO.println((i+1) + ")\n" + "- " + cinemasBooked.get(i) + "\n" + "- " + filmsBooked.get(i) + "\n" + "- " + viewers.get(i));
+        }
+    }
+
+    public void menuBooking(){
+        while(this.key){
+            IO.println("Букинг: \n1)Кинотеатры \n2)Фильмы \n3)Купить билеты");
+            count = 0;
+            int option = input.nextInt();
+            input.nextLine();
+            switch (option) {
+                case 1:
+                    showCinema();
+                    break;
+                case 2:
+                    showFilm();
+                    break;
+                case 3:
+                    setCinema();
+                    setFilm();
+                    setViewer();
+                    this.key = false;
+                    break;
+                default:
+                    this.key = false;
+                    break;
             }
+        }
+    }
+
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        Main app = new Main();
+        while(true){
+            app.menuBooking();
+            app.key = true;
             IO.println("Хотите еще одного человека добавить?(yes/no):");
             String st = input.nextLine();
             if (st.equalsIgnoreCase("no")){

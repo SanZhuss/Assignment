@@ -2,7 +2,6 @@
 public class Cinema {
     private String name;
     private String location;
-    private int films;
 
     public Cinema(String name, String location) {
         this.name = name;
