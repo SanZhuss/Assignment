@@ -1,15 +1,11 @@
-public class StudentViewer extends Viewer{
-    private String university;
+public class StudentViewer extends AdultViewer {
 
-    public StudentViewer(String name, int age, String university){
-        super(name, age);
-        this.university = university;
+    public StudentViewer(int id, int age) {
+        super(id, age);
     }
 
-
-    public String getUniversity(){ return this.university; };
     @Override
-    public double getDiscount(){return 0.2;}
-
-    public void setUniversity(String university){ this.university = university; };
+    public double getDiscount() {
+        return 0.15; // 15%
+    }
 }

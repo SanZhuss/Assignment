@@ -1,36 +1,24 @@
 // ======================= Viewer.java =======================
-public class Viewer {
-    protected String name;
-    protected int age;
-    protected int id;
+public abstract class Viewer {
 
-    public Viewer(String name, int age) {
-        this.name = name;
+    protected int id;
+    protected int age;
+
+    public Viewer(int id, int age) {
+        this.id = id;
         this.age = age;
     }
 
-
-    //Method
-    public double getDiscount() {
-        return 0.0;
-    }
-
-
-    // Getters
-    public String getName() { return name; }
+    public int getId() { return id; }
     public int getAge() { return age; }
 
-    // Setters
-    public void setName(String name) { this.name = name; }
+    public void setId(int id) { this.id = id; }
     public void setAge(int age) { this.age = age; }
 
-    public void printInfo() {
-        IO.println("Viewer: " + name + ", Age: " + age);
+    public boolean isChild() {
+        return age < 18;
     }
 
-    @Override
-    public String toString() {
-        return "Viewer: " + name + ", Age: " + age ;
-    }
+    public abstract double getDiscount();
 }
 

@@ -1,15 +1,11 @@
-public class PensionerViewer extends Viewer{
-    private int insuranceNumber;
+public class PensionerViewer extends AdultViewer {
 
-    public PensionerViewer(String name, int age, int insuranceNumber){
-        super(name, age);
-        this.insuranceNumber = insuranceNumber;
+    public PensionerViewer(int id, int age) {
+        super(id, age);
     }
 
-
-    public int getInsuranceNumber(){ return this.insuranceNumber; };
     @Override
-    public double getDiscount(){return 0.3;}
-
-    public void setInsuranceNumber(int insuranceNumber){ this.insuranceNumber = insuranceNumber; };
+    public double getDiscount() {
+        return 0.30; // 30%
+    }
 }

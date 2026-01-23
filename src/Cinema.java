@@ -1,32 +1,34 @@
 // ======================= Cinema.java =======================
+import java.util.*;
+import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
+
 public class Cinema {
-    private String name;
-    private String location;
 
-    public Cinema(String name, String location) {
-        this.name = name;
-        this.location = location;
+    static Scanner input = new Scanner(System.in);
+
+    public static void showMovies() {
+        System.out.println("Movies list...");
+        DB.showCinemasAndMovies();
     }
 
-    // Getters
-    public String getName() { return name; }
-    public String getLocation() { return location; }
+    public static void buyTicket(Viewer viewer) {
 
-    // Setters
-    public void setName(String name) { this.name = name; }
-    public void setLocation(String location) { this.location = location; }
+        System.out.print("Movie ID: ");
+        int movieId = input.nextInt();
 
-    public void printInfo() {
-        IO.println("Cinema: " + name + " | Location: " + location);
-    }
+        Film film = DB.getMovieById(movieId);
 
-    // Compare cinemas by name
-    public boolean equals(Cinema other) {
-        return this.name.equals(other.name);
-    }
+        Ticket ticket = new Ticket();
+        ticket.calculatePrice(film, viewer);
 
-    @Override
-    public String toString() {
-        return "Cinema: " + name + " | Location: " + location;
+        DB.saveTicket(viewer.getId(), movieId, ticket.getFinalPrice());
+
+        System.out.println("Ticket price: " + ticket.getFinalPrice());
     }
 }
+
