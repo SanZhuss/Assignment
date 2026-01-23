@@ -4,6 +4,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.*;
+import java.sql.*;
+
+
 
 public class DB {
     private static final String connectionUrl = "jdbc:postgresql://localhost:5432/OOPAssignment";
@@ -69,24 +75,60 @@ public class DB {
     }
 
 
-    public static void showCinemasAndMovies() {
-        String sql = "SELECT * FROM cinemas";
+    public static List<Film> getAllMovies() {
 
-        String b = "SELECT mo.movie_id, mo.title, mo.genre, mo.rating FROM movies AS mo";
+        List<Film> films = new ArrayList<>();
 
-        try (Connection con = DB.getConnection();
-             Statement stmt = con.createStatement();
-             ResultSet rs = stmt.executeQuery(sql);
-             ResultSet rs2 = stmt.executeQuery(b)) {
+        String sql = """
+        SELECT movie_id, cinema_id, title, genre, price, rating
+        FROM movies
+    """;
 
-            while (rs.next() && rs2.next()) {
-                IO.println(rs.getInt("cinema_id") + ". Cinema: " + rs.getString("name") + " " + " Location: " + rs.getString("location"));
-                IO.println("     " + rs2.getInt("movie_id") + ". Movie: " + rs2.getString("title") + " Genre: " + rs2.getString("genre") + " Rating: " + rs2.getDouble("rating"));
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Film film = new Film(
+                        rs.getInt("movie_id"),
+                        rs.getInt("cinema_id"),
+                        rs.getString("title"),
+                        rs.getString("genre"),
+                        rs.getInt("price"),
+                        rs.getDouble("rating")
+                );
+                films.add(film);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return films;
     }
+
+    public static void showMovies() {
+
+        List<Film> films = DB.getAllMovies();
+
+        if (films.isEmpty()) {
+            System.out.println("No movies available");
+            return;
+        }
+
+        System.out.println("\n=== MOVIES LIST ===");
+        for (Film f : films) {
+            System.out.println(
+                    f.getId() + " | " +
+                            f.getTitle() + " | " +
+                            f.getGenre() + " | " +
+                            f.getPrice() + " | Rating: " +
+                            f.getRating()
+            );
+        }
+    }
+
+
 
     public static Film getMovieById(int movieId) {
 

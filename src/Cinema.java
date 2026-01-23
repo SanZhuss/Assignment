@@ -13,7 +13,7 @@ public class Cinema {
 
     public static void showMovies() {
         System.out.println("Movies list...");
-        DB.showCinemasAndMovies();
+        DB.showMovies();
     }
 
     public static void buyTicket(Viewer viewer) {
